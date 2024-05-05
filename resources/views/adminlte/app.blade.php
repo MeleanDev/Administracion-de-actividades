@@ -1,0 +1,72 @@
+@extends('adminlte::page')
+
+{{-- Extend and customize the browser title --}}
+
+@section('title')
+    {{ config('adminlte.title') }}
+    @hasSection('subtitle') | @yield('subtitle') @endif
+@stop
+
+{{-- Extend and customize the page content header --}}
+
+@section('content_header')
+    @hasSection('content_header_title')
+        <h1 class="text-muted">
+            @yield('content_header_title')
+
+            @hasSection('content_header_subtitle')
+                <small class="text-dark">
+                    <i class="fas fa-xs fa-angle-right text-muted"></i>
+                    @yield('content_header_subtitle')
+                </small>
+            @endif
+        </h1>
+    @endif
+@stop
+
+{{-- Rename section content to content_body --}}
+
+@section('content')
+    @yield('content_body')
+@stop
+
+{{-- Create a common footer --}}
+
+@section('footer')
+    <div class="float-right text-dark">
+        Version: {{ config('app.version', '1.0.0') }}
+    </div>
+
+    <strong>
+        <a class="text-dark" href="{{ config('app.company_url', '') }}" target="_blank">
+            {{ config('app.company_name', '') }}
+        </a>
+    </strong>
+@stop
+
+{{-- Add common Javascript/Jquery code --}}
+
+@push('js')
+
+@endpush
+
+{{-- Add common CSS customizations --}}
+
+@push('css')
+<style type="text/css">
+
+    {{-- You can add AdminLTE customizations here --}}
+    .main-footer {
+    background-color: rgb(254, 255, 255);
+    }
+    /*
+    .card-header {
+        border-bottom: none;
+    }
+    .card-title {
+        font-weight: 600;
+    }
+    */
+
+</style>
+@endpush
