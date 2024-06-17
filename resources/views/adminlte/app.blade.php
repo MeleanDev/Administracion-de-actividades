@@ -33,12 +33,12 @@
 {{-- Create a common footer --}}
 
 @section('footer')
-    <div class="float-right text-dark">
+    <div class="float-right text-light">
         Version: {{ config('app.version', '1.0.0') }}
     </div>
 
     <strong>
-        <a class="text-dark" href="{{ config('app.company_url', '') }}" target="_blank">
+        <a class="text-light" href="{{ config('app.company_url', '') }}" target="_blank">
             {{ config('app.company_name', '') }}
         </a>
     </strong>
@@ -57,7 +57,8 @@
 
     {{-- You can add AdminLTE customizations here --}}
     .main-footer {
-    background-color: rgb(254, 255, 255);
+    background-color: rgb(61, 153, 112);
+    color: lightyellow;
     }
     /*
     .card-header {
