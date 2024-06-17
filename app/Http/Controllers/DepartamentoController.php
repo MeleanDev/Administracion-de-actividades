@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\DepartamentoRequest;
 use App\Models\Departamento;
 use App\Service\Admin\DepartamentoClass;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class DepartamentoController extends Controller
         }
     }
 
-    public function crear(Request $datos)
+    public function crear(DepartamentoRequest $datos)
     {
         try {
             $this->departamento->crear($datos);
@@ -48,7 +49,7 @@ class DepartamentoController extends Controller
         return response()->json($dato);
     }
 
-    public function editar(Request $datos, Departamento $id)
+    public function editar(DepartamentoRequest $datos, Departamento $id)
     {
         try {
             $this->departamento->editar($datos, $id);
