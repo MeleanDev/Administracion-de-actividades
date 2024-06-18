@@ -25,6 +25,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(EmpleadoController::class)->group(function () {
             Route::get('Empleados', 'index')->name('empleados');
             Route::get('Empleados/Lista', 'lista')->name('empleados.lista');
+            Route::post('Empleados', 'crear')->name('empleados.crear');
+            Route::get('Empleados/dato/{id?}', 'consulta')->name('empleados.consulta');
+            Route::post('Empleados/Editar/{id?}', 'editar')->name('empleados.editar');
+            Route::delete('Empleados/{id?}', 'eliminar')->name('empleados.eliminar');
         });
 
     });

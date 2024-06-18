@@ -26,8 +26,7 @@
             <thead class="bg-info">
                 <tr>
                     <th data-priority="1">Foto</th>
-                    <th>Codigo</th>
-                    <th data-priority="2">Cedula</th>
+                    <th data-priority="2">Codigo</th>
                     <th>Nombres</th>
                     <th>Apellidos</th>
                     <th>Departamento</th>
@@ -40,7 +39,6 @@
                 <tr>
                     <th>Foto</th>
                     <th>Codigo</th>
-                    <th>Cedula</th>
                     <th>Nombres</th>
                     <th>Apellidos</th>
                     <th>Departamento</th>
@@ -71,6 +69,7 @@
                             <input type="file" name="foto" id="foto" class="form-control" accept=".jpg,.png"
                                 required onchange="previewImage()">
                         </div>
+                        {{-- Codigo --}}
                         <div class="form-group text-center">
                             <label for="codigo">Codigo para el empleado.</label>
                             <input type="text" class="form-control" id="codigo" placeholder="Codigo del empleado."
@@ -124,6 +123,16 @@
                                     empleado.</small>
                             </div>
                         </div>
+                        {{-- Departamento --}}
+                        <div class="form-group text-center">
+                            <label for="departamento_id">Asignar departamento.</label>
+                            <input type="hidden" class="form-control" id="departamentoVer" readonly>
+                            <select class="form-control mb-2" id="departamento_id" style="width: 100%" required>
+                                @foreach ($departamentos as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
@@ -136,7 +145,13 @@
     </div>
 @stop
 
-{{-- Push extra scripts --}}
+@push('css')
+    <style>
+        .dropdown-menu.show {
+            display: inline-table;
+        }
+    </style>
+@endpush
 
 @push('js')
     <script>
@@ -171,24 +186,40 @@
                     className: 'text-center'
                 },
                 {
-                    data: 'cedula',
-                    name: 'cedula',
-                    className: 'text-center'
+                    data: 'Pnombre',
+                    name: 'Pnombre',
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        if (row.Sapellido) {
+                            return row.Pnombre + ' ' + row.Snombre;
+                        } else {
+                            return row.Pnombre;
+                        }
+                    }
                 },
                 {
-                    data: 'nombre',
-                    name: 'nombre',
-                    className: 'text-center'
-                },
-                {
-                    data: 'apellido',
-                    name: 'apellido',
-                    className: 'text-center'
+                    data: 'Papellido',
+                    name: 'Papellido',
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        if (row.Sapellido) {
+                            return row.Papellido + ' ' + row.Sapellido;
+                        } else {
+                            return row.Papellido;
+                        }
+                    }
                 },
                 {
                     data: 'departamento_id',
                     name: 'departamento_id',
-                    className: 'text-center'
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        if (row.depa) {
+                            return row.depa;
+                        } else {
+                            return 'Departamento Desconocido';
+                        }
+                    }
                 },
                 {
                     "data": null,
@@ -212,7 +243,7 @@
             ],
             columnDefs: [{
                 orderable: false,
-                targets: [6, 0],
+                targets: [5, 0],
                 responsivePriority: 1,
                 responsivePriority: 2,
 
@@ -236,83 +267,85 @@
         });
 
         //  Consultas EndPoint
-        // consulta = function(id) {
-        //     return new Promise((resolve, reject) => {
-        //         $.ajax({
-        //         url: " /" + ,
-        //         method: "GET",
-        //         success: function(Data) {
-        //             resolve(Data);
-        //         },
-        //         error: function(xhr, status, error) {
-        //             reject(error);
-        //         }
-        //         });
-        //     });
-        // };
+        consulta = function(id) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: "{{ route('empleados.consulta') }}/" + id,
+                    method: "GET",
+                    success: function(Data) {
+                        resolve(Data);
+                    },
+                    error: function(xhr, status, error) {
+                        reject(error);
+                    }
+                });
+            });
+        };
 
         // Enviar datos
-        // $('#formulario').submit(function(e){
-        //     e.preventDefault(); // Previene el recargo de la página
+        $('#formulario').submit(function(e) {
+            e.preventDefault(); // Previene el recargo de la página
 
-        //     var formData = new FormData(this);
-        //     formData.append('foto', $('#foto')[0].files[0]);
-        //     formData.append('codigo', $.trim($('#codigo').val()));
-        //     formData.append('nombre', $.trim($('#nombre').val()));
-        //     formData.append('descripcion', $.trim($('#descripcion').val()));
-        //     formData.append('categoria', $.trim($('#categoria').val()));
-        //     formData.append('precio', $.trim($('#precio').val()));
-        //     formData.append('cantidad', $.trim($('#cantidad').val()));
+            var formData = new FormData(this);
+            formData.append('foto', $('#foto')[0].files[0]);
+            formData.append('codigo', $.trim($('#codigo').val()));
+            formData.append('Pnombre', $.trim($('#Pnombre').val()));
+            formData.append('Snombre', $.trim($('#Snombre').val()));
+            formData.append('Papellido', $.trim($('#Papellido').val()));
+            formData.append('Sapellido', $.trim($('#Sapellido').val()));
+            formData.append('correo', $.trim($('#correo').val()));
+            formData.append('telefono', $.trim($('#telefono').val()));
+            formData.append('departamento_id', $('#departamento_id').val());
 
-        //         $.ajax({
-        //         url: rutaAccion,
-        //         method: 'POST',
-        //         data: formData,
-        //         dataType: 'JSON',
-        //         contentType: false, 
-        //         processData: false,
-        //         cache:false,
-        //         headers: {
-        //             'X-CSRF-TOKEN': token
-        //         },
-        //         success: function(data) {
-        //             table.ajax.reload(null, false);
-        //             if (data.success) {
-        //                 Swal.fire({
-        //                 title: data.informacion,
-        //                 text: "El registro fue "+data.accion+" al sistema",
-        //                 icon: "success",
-        //                 timer: 2000,
-        //                 showConfirmButton: false,
-        //                 timerProgressBar: true
-        //                 }); 
-        //         } else {
-        //             Swal.fire({
-        //             title: 'Producto no registrada',
-        //             text: "Error en el registro",
-        //             icon: "error",
-        //             timer: 2000,
-        //             showConfirmButton: false,
-        //             timerProgressBar: true
-        //             }); 
-        //         }
+            $.ajax({
+                url: rutaAccion,
+                method: 'POST',
+                data: formData,
+                dataType: 'JSON',
+                contentType: false,
+                processData: false,
+                cache: false,
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                success: function(data) {
+                    table.ajax.reload(null, false);
+                    if (data.success) {
+                        Swal.fire({
+                            title: data.informacion,
+                            text: "El registro fue " + data.accion + " al sistema",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Empleado no registrado',
+                            text: "Error en el registro",
+                            icon: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                    }
 
-        //         },
-        //         error: function(xhr, status, error) {
-        //         Swal.fire({
-        //             title: "Producto no agregada",
-        //             text: "El registro no fue agregado al sistema!!",
-        //             icon: "error"
-        //         });
-        //         }
-        //     });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Falla en el sistema",
+                        text: "El registro no fue agregado al sistema!!",
+                        icon: "error"
+                    });
+                }
+            });
 
-        //     $('#modalCRUD').modal('hide'); // Cierra el modal después de la solicitud AJAX
-        // });
+            $('#modalCRUD').modal('hide'); // Cierra el modal después de la solicitud AJAX
+        });
 
         // ACCIONES
         crear = function() {
-            // rutaAccion = ""; 
+            rutaAccion = "{{ route('empleados.crear') }}";
 
             // Editar Formulario
             $("#formulario").trigger("reset");
@@ -330,10 +363,14 @@
             $("#foto").attr("required", true);
 
             // Show
+            $('#departamento_id').show()
             $('#small').show()
             $('#fotoTitle').show()
             $('#foto').show()
             $('#submit').show()
+
+            // Hidder
+            $('#departamentoVer').attr('type', 'hidden');
 
             // Editar Modal
             $("#titulo").html("Agregar nuevo empleado");
@@ -342,127 +379,147 @@
             $('#modalCRUD').modal('show');
         };
 
-        // ver = async function(id) {
-        //     try {
-        //         datos = await consulta(id);
-        //         $("#titulo").html("Ver Producto -> " + datos.nombre);
-        //         $("#bg-titulo").attr("class","modal-header bg-info"); 
-        //         // asigancion de valores
-        //         $("#preview").attr("src", datos.fotoUrl);
-        //         $("#nombre").val(datos.nombre);
-        //         $("#codigo").val(datos.codigo);
-        //         $("#categoriaVer").val(datos.categoria);
-        //         $("#descripcion").val(datos.descripcion);
-        //         $("#cantidad").val(datos.cantidad);
-        //         $("#precio").val(datos.precio);
-        //         $('#categoriaVer').attr('type', 'text');
-        //         // readoly true
-        //         $("#descripcion").attr("readonly", true);
-        //         $("#nombre").attr("readonly", true);
-        //         $("#codigo").attr("readonly", true);
-        //         $("#cantidad").attr("readonly", true);
-        //         $("#precio").attr("readonly", true);
-        //         // ocultar botones y small
-        //         $('#categoria').hide()
-        //         $('#codigoSmall').hide() 
-        //         $('#nombreSmall').hide()
-        //         $('#descripcionSmall').hide()
-        //         $('#cantidadSmall').hide()
-        //         $('#precioSmall').hide()
-        //         $('#foto').hide()
-        //         $('#fotoTitle').hide()
-        //         $('#submit').hide()
-        //         $('#modalCRUD').modal('show'); 
-        //     } catch (error) {
-        //         console.error("Error:", error);
-        //     }
-        // };
+        ver = async function(id) {
+            try {
+                $("#formulario").trigger("reset");
+                datos = await consulta(id);
+                $("#titulo").html("Ver Empleado -> " + datos.codigo);
+                $("#bg-titulo").attr("class", "modal-header bg-info");
+                // asigancion de valores
+                $("#preview").attr("src", datos.fotoUrl);
+                $("#codigo").val(datos.codigo);
+                $("#Pnombre").val(datos.Pnombre);
+                $("#Snombre").val(datos.Snombre);
+                $("#Papellido").val(datos.Papellido);
+                $("#Sapellido").val(datos.Sapellido);
+                $("#departamentoVer").val(datos.depa);
+                $("#telefono").val(datos.telefono);
+                $("#correo").val(datos.correo);
+                $('#departamentoVer').attr('type', 'text');
+                // readoly true
+                $("#codigo").attr("readonly", true);
+                $("#Pnombre").attr("readonly", true);
+                $("#Snombre").attr("readonly", true);
+                $("#Papellido").attr("readonly", true);
+                $("#Sapellido").attr("readonly", true);
+                $("#telefono").attr("readonly", true);
+                $("#correo").attr("readonly", true);
+                // ocultar botones y small
+                $('#departamento_id').hide()
+                $('#foto').hide()
+                $('#fotoTitle').hide()
+                $('#submit').hide()
+                $('#modalCRUD').modal('show');
+            } catch (error) {
+                Swal.fire({
+                    title: '¡ Error !',
+                    text: 'Tu registro no existe.',
+                    icon: 'error',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+            }
+        };
 
-        // editar = async function(id){
-        //     try {
-        //         $("#formulario").trigger("reset");
-        //         datos = await consulta(id);
-        //         rutaAccion = "/"+id;
-        //         $("#titulo").html("Editar Producto -> " + datos.nombre);
-        //         $("#bg-titulo").attr("class","modal-header bg-warning"); 
-        //         // Asignacion de valores
-        //         $("#precio").val(datos.precio);
-        //         $("#cantidad").val(datos.cantidad);
-        //         $("#descripcion").val(datos.descripcion);
-        //         $("#categoria").val(datos.categoria);
-        //         $('#categoria').trigger('change');
-        //         $("#codigo").val(datos.codigo);
-        //         $("#nombre").val(datos.nombre);
-        //         $("#preview").attr("src", datos.fotoUrl);
-        //         // readoly false
-        //         $("#codigo").attr("readonly", false);
-        //         $("#nombre").attr("readonly", false);
-        //         $("#descripcion").attr("readonly", false);
-        //         $("#cantidad").attr("readonly", false);
-        //         $("#precio").attr("readonly", false);
-        //         $("#foto").attr("required", false);
-        //         // mostrar botones y small
-        //         $('#categoriaVer').attr('type', 'hidden');
-        //         $('#categoria').show()
-        //         $('#codigoSmall').show() 
-        //         $('#nombreSmall').show()
-        //         $('#descripcionSmall').show()
-        //         $('#cantidadSmall').show()
-        //         $('#precioSmall').show()
-        //         $('#foto').show()
-        //         $('#fotoTitle').show()
-        //         $('#submit').show()
-        //         $('#modalCRUD').modal('show'); 
-        //     } catch (error) {
-        //         console.error("Error:", error);
-        //     }
-        // };
+        editar = async function(id) {
+            rutaAccion = "{{ route('empleados.editar') }}/" + id;
+            try {
+                $("#formulario").trigger("reset");
+                datos = await consulta(id);
+                $("#titulo").html("Editar Empleado -> " + datos.codigo);
+                $("#bg-titulo").attr("class", "modal-header bg-warning");
+                // asigancion de valores
+                $("#foto").attr("required", false);
+                $("#preview").attr("src", datos.fotoUrl);
+                $("#codigo").val(datos.codigo);
+                $("#Pnombre").val(datos.Pnombre);
+                $("#Snombre").val(datos.Snombre);
+                $("#Papellido").val(datos.Papellido);
+                $("#Sapellido").val(datos.Sapellido);
+                $("#departamento_id").val(datos.departamento_id);
+                $('#departamento_id').trigger('change');
+                $("#telefono").val(datos.telefono);
+                $("#correo").val(datos.correo);
+                $('#departamentoVer').attr('type', 'hidden');
+                // readoly true
+                $("#codigo").attr("readonly", false);
+                $("#Pnombre").attr("readonly", false);
+                $("#Snombre").attr("readonly", false);
+                $("#Papellido").attr("readonly", false);
+                $("#Sapellido").attr("readonly", false);
+                $("#telefono").attr("readonly", false);
+                $("#correo").attr("readonly", false);
+                // mostrar botones y small
+                $('#departamento_id').show()
+                $('#foto').show()
+                $('#fotoTitle').show()
+                $('#submit').show()
+                $('#modalCRUD').modal('show');
+            } catch (error) {
+                Swal.fire({
+                    title: '¡ Error !',
+                    text: 'Tu registro no existe.',
+                    icon: 'error',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+            }
+        };
 
-        // eliminar = function(id){
-        //     Swal.fire({
-        //         title: '¿ Estas seguro que desea eliminar el registro?',
-        //         text: "¡ No podrás revertir esto !",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: '¡ Sí, bórralo !',
-        //         }).then((result) => {
-        //         if (result.isConfirmed){
-        //             $.ajax({
-        //             url: "/"+id,
-        //             method: "DELETE",
-        //             headers: {
-        //                 'X-CSRF-TOKEN': token
-        //             },
-        //             success: function(data) {
-        //                 if (data.success) {
-        //                 table.row('#' + id).remove().draw();
-        //                 // Mostrar mensaje de éxito con temporizador
-        //                 Swal.fire({
-        //                     title: '¡ Eliminado !',
-        //                     text: 'Tu registro ha sido eliminado.',
-        //                     icon: 'success',
-        //                     timer: 2000,
-        //                     showConfirmButton: false,
-        //                     timerProgressBar: true,
-        //                 });
-        //                 } else {
-        //                 // Mostrar mensaje de error
-        //                 Swal.fire({
-        //                     title: '¡ Error !',
-        //                     text: 'Tu registro no ha sido eliminado.',
-        //                     icon: 'error',
-        //                     timer: 2000,
-        //                     showConfirmButton: false,
-        //                     timerProgressBar: true,
-        //                 });
-        //                 }
-        //             }
-        //             });
-        //         }
-        //         });
-        // };
+        eliminar = function(id) {
+            Swal.fire({
+                title: '¿ Estas seguro que desea eliminar el registro?',
+                text: "¡ No podrás revertir esto !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '¡ Sí, bórralo !',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('empleados.eliminar') }}/" + id,
+                        method: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                table.row('#' + id).remove().draw();
+                                // Mostrar mensaje de éxito con temporizador
+                                Swal.fire({
+                                    title: '¡ Eliminado !',
+                                    text: 'Tu registro ha sido eliminado.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                    timerProgressBar: true,
+                                });
+                            } else {
+                                // Mostrar mensaje de error
+                                Swal.fire({
+                                    title: '¡ Error !',
+                                    text: 'Tu registro no ha sido eliminado.',
+                                    icon: 'error',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                    timerProgressBar: true,
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error en el sistema",
+                                text: "El registro no fue agregado al sistema!!",
+                                icon: "error"
+                            });
+                        }
+                    });
+                }
+            });
+        };
 
         // FIN ACCIONES
 

@@ -27,7 +27,7 @@ class Empleado extends Model
         'departamento_id',
     ];
 
-    public function empleado(): BelongsTo
+    public function departamento(): BelongsTo
     {
         return $this->belongsTo(Departamento::class);
     }
