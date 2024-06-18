@@ -20,7 +20,7 @@
                             <div class="card-body">
                                 <h5 class="card-title text-black">Bienvenido {{auth()->user()->name}}!! 😎🎉</h5>
                                 <p class="mb-2">
-                                    <br>Al sistema X. <br><br>Sistema desarrollado por MeleanDev.
+                                    <br>Al sistema de asignacion de actividades. <br><br>Sistema desarrollado por MeleanDev.
                                 </p>
                         
                                 <a href="{{ config('app.company_url', '') }}" target="_blank" class="btn btn-sm btn-primary">Contactar con el Desarrollador</a>
@@ -29,7 +29,7 @@
                         <div class="col-sm-5 text-center text-sm-left">
                             <div class="card-body pb-0 px-0 px-md-4">
                                 <img
-                                src="{{ asset("img/panelcard.png") }}"
+                                src="{{ asset("sistema/img/panelcard.png") }}"
                                 height="160"
                                 alt="img del sistema"
                                 data-app-dark-img="illustrations/man-with-laptop-dark.png"
