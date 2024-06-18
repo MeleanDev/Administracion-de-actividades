@@ -99,14 +99,14 @@ class DBClass
 
     // Borrar archivo de la app
     public function eliminarFotoCarpt($foto){
-        unlink(public_path($foto));
+        unlink(public_path('storage/'.$foto));
     }
 
     // Guardar img
     public function guardarImg($datos, $ruta){
         $extension = $datos->file('foto')->getClientOriginalExtension();
         $filename = time().'.'.$extension;
-        $datos->file('foto')->move(public_path($ruta), $filename);
+        $datos->file('foto')->storeAs('public/'.$ruta, $filename);
 
         $nombreActualizado = $ruta.'/'.$filename;
         return $nombreActualizado;

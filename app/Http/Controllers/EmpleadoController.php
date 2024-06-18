@@ -27,7 +27,7 @@ class EmpleadoController extends Controller
         if ($request->ajax()) {
             $datos = $this->empleado->empleadosLista();
             foreach ($datos as $item) {
-                $item->fotoUrl = asset($item->foto);
+                $item->fotoUrl = asset('storage/'.$item->foto);
                 $item->depa = $item->departamento->nombre;
             }
             return datatables()->of($datos)->toJson();
@@ -54,7 +54,7 @@ class EmpleadoController extends Controller
     public function consulta($id)
     {
         $dato = $this->empleado->consultaId($id);
-        $dato->fotoUrl = asset($dato->foto);
+        $dato->fotoUrl = asset('storage/'.$dato->foto);
         $dato->depa = $dato->departamento->nombre;
         return response()->json($dato);
     }
