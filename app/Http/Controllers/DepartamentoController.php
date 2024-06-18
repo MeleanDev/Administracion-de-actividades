@@ -43,10 +43,9 @@ class DepartamentoController extends Controller
         return $respuesta;
     }
 
-    public function consulta($id)
+    public function consulta(Departamento $id)
     {
-        $dato = $this->departamento->consultaId($id);
-        return response()->json($dato);
+        return response()->json($id);
     }
 
     public function editar(DepartamentoRequest $datos, Departamento $id)

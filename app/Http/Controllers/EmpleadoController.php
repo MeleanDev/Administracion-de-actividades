@@ -51,12 +51,11 @@ class EmpleadoController extends Controller
         return $respuesta;
     }
 
-    public function consulta($id)
+    public function consulta(Empleado $id)
     {
-        $dato = $this->empleado->consultaId($id);
-        $dato->fotoUrl = asset('storage/'.$dato->foto);
-        $dato->depa = $dato->departamento->nombre;
-        return response()->json($dato);
+        $id->fotoUrl = asset('storage/'.$id->foto);
+        $id->depa = $id->departamento->nombre;
+        return response()->json($id);
     }
 
     public function editar(Request $datos, Empleado $id)

@@ -33,12 +33,6 @@ class DBClass
             $emplea->save();
         }
 
-        // Consulta ID
-        public function empleadosConsultaId($id){
-            $datos = Empleado::find($id);
-            return $datos;
-        }
-
         // Editar
         public function empleadosEditar($datos, $nombreFoto, $id){
 
@@ -74,12 +68,6 @@ class DBClass
             $departamen = new Departamento();
             $departamen->nombre = $datos->input('nombre');
             $departamen->save();
-        }
-
-        // Consulta ID
-        public function departamentoConsultaId($id){
-            $datos = Departamento::find($id);
-            return $datos;
         }
 
         // Editar

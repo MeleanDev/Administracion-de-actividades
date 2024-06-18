@@ -19,11 +19,6 @@ class DepartamentoClass
         $this->DB->departamentoCrear($datos);
     }
 
-    public function consultaId($id){
-        $datos = $this->DB->departamentoConsultaId($id);
-        return $datos;
-    }
-
     public function editar($datos, $id){
         $this->DB->departamentoEditar($datos, $id);
     }

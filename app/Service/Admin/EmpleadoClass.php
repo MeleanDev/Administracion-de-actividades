@@ -34,11 +34,6 @@ class EmpleadoClass
         $this->DB->eliminarFotoCarpt($foto);
     }
 
-    public function consultaId($id){
-        $datos = $this->DB->empleadosConsultaId($id);
-        return $datos;
-    }
-
     public function editar($datos, $id){
         $fotoNombre = null;
         if ($datos->hasFile('foto')) {
