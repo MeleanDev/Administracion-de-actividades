@@ -10,7 +10,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('Sistema/Perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('Sistema/Perfil', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('Sistema/Perfil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::delete('Sistema/Perfil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

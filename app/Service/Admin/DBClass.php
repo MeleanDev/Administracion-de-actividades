@@ -55,6 +55,15 @@ class DBClass
         public function empleadosEliminar($id){
             $id->delete();
         }
+
+        // Buscar
+        public function empleadoDepartameto($id){
+            $dato = Empleado::where('departamento_id', $id)->first();
+            if ($dato) {
+                return $dato;
+            }
+            return $dato = false;
+        }
     
     // Departamentos
         // Lista 

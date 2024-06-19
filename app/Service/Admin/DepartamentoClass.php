@@ -23,6 +23,14 @@ class DepartamentoClass
         $this->DB->departamentoEditar($datos, $id);
     }
 
+    public function evaluarEliminacion($id){
+        $datos = $this->DB->empleadoDepartameto($id);
+        if ($datos) {
+            return $datos;
+        }
+        return $datos = false;
+    }
+
     public function eliminar($id){
         $this->DB->departamentoEliminar($id);
     }

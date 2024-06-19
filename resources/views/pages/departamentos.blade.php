@@ -280,7 +280,7 @@
                                 // Mostrar mensaje de error
                                 Swal.fire({
                                     title: '¡ Error !',
-                                    text: 'Tu registro no ha sido eliminado.',
+                                    text: data.mensaje,
                                     icon: 'error',
                                     timer: 2000,
                                     showConfirmButton: false,

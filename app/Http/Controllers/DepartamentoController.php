@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Admin\DepartamentoRequest;
 use App\Models\Departamento;
 use App\Service\Admin\DepartamentoClass;
+use Exception;
 use Illuminate\Http\Request;
 
 class DepartamentoController extends Controller
@@ -65,10 +66,17 @@ class DepartamentoController extends Controller
     public function eliminar(Departamento $id)
     {
         try {
+            $evaluar = $this->departamento->evaluarEliminacion($id->id);
+            if ($evaluar) {
+                throw new Exception('No se puede eliminar porque hay empleados en este departamento');
+            }
             $this->departamento->eliminar($id);
             $respuesta = response()->json(['success' => true,]);
         } catch (\Throwable $th) {
-            $respuesta = response()->json(['error' => true,]);
+            $respuesta = response()->json([
+                'error' => true,
+                'mensaje' => $th->getMessage(),
+            ]);
         }
         return $respuesta;
     }
